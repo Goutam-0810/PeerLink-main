@@ -1,21 +1,16 @@
 #!/bin/bash
 
-#VPS (Virtual Private Server) Setup Script
-#Helps to setup Project on ubuntu machine
-
-#Exit on error
 set -e
 
-echo " -----Running PeerLink VPS Setup Script-----"
-echo "This Script will install Java, Node.js, Nginx, and set up PeerLink"
+echo "-----Running PeerLink VPS Setup Script-----"
 
-# To update System
+# Update System
 sudo apt update
 sudo apt upgrade -y
 
-#Installation of Java
-echo "Installing Java JDK-17"
-sudo apt install -y openjdk-17-jdk4
+# Install Java ✅ fixed package name
+echo "Installing Java JDK-17..."
+sudo apt install -y openjdk-17-jdk
 
 # Install Node.js
 echo "Installing Node.js..."
@@ -26,7 +21,7 @@ sudo apt install -y nodejs
 echo "Installing Nginx..."
 sudo apt install -y nginx
 
-# Install PM2(Process Manager)
+# Install PM2
 echo "Installing PM2..."
 sudo npm install -g pm2
 
@@ -34,7 +29,7 @@ sudo npm install -g pm2
 echo "Installing Maven..."
 sudo apt install -y maven
 
-# Clone repository (uncomment and modify if using Git)
+# Clone repository
 echo "Cloning repository..."
 git clone https://github.com/Goutam-0810/peerlink.git
 cd peerlink
@@ -50,23 +45,24 @@ npm install
 npm run build
 cd ..
 
+# Open firewall ports ✅ added
+echo "Opening firewall ports..."
+sudo ufw allow 80/tcp
+sudo ufw allow 8080/tcp
+sudo ufw allow 49152:65535/tcp
+sudo ufw allow 49152:65535/udp
+
 # Set up Nginx
 echo "Setting up Nginx..."
-
-# Ensure the default site is removed to avoid conflicts
 if [ -e /etc/nginx/sites-enabled/default ]; then
     sudo rm /etc/nginx/sites-enabled/default
-    echo "Removed default Nginx site configuration."
 fi
 
-# Create the peerlink configuration file with the correct content
-echo "Creating /etc/nginx/sites-available/peerlink..."
 cat <<EOF | sudo tee /etc/nginx/sites-available/peerlink
 server {
     listen 80;
-    server_name _; # Catch-all for HTTP requests
+    server_name _;
 
-    # Backend API
     location /api/ {
         proxy_pass http://localhost:8080/;
         proxy_http_version 1.1;
@@ -79,7 +75,6 @@ server {
         proxy_cache_bypass \$http_upgrade;
     }
 
-    # Frontend
     location / {
         proxy_pass http://localhost:3000;
         proxy_http_version 1.1;
@@ -92,44 +87,37 @@ server {
         proxy_cache_bypass \$http_upgrade;
     }
 
-    # Additional security headers (still good to have)
     add_header X-Content-Type-Options nosniff;
     add_header X-Frame-Options SAMEORIGIN;
     add_header X-XSS-Protection "1; mode=block";
 }
 EOF
 
-# Create the symbolic link to enable the peerlink site
 sudo ln -sf /etc/nginx/sites-available/peerlink /etc/nginx/sites-enabled/peerlink
 
 sudo nginx -t
 if [ $? -eq 0 ]; then
     sudo systemctl restart nginx
-    echo "Nginx configured and restarted successfully."
+    echo "Nginx configured successfully ✅"
 else
-    echo "Nginx configuration test failed. Please check /etc/nginx/nginx.conf and /etc/nginx/sites-available/peerlink."
+    echo "Nginx configuration failed ❌"
     exit 1
 fi
 
-# Start backend with PM2
+# Start backend ✅ fixed JAR name and command
 echo "Starting backend with PM2..."
-# Ensure all dependencies are in the classpath
-CLASSPATH="target/p2p-1.0-SNAPSHOT.jar:$(mvn dependency:build-classpath -DincludeScope=runtime -Dmdep.outputFile=/dev/stdout -q)"
-pm2 start --name peerlink-backend java -- -cp "$CLASSPATH" p2p.App
+pm2 start --name peerlink-backend java -- -jar target/peerlink-1.0-SNAPSHOT.jar
 
-# Start frontend with PM2
+# Start frontend
 echo "Starting frontend with PM2..."
 cd ui
 pm2 start npm --name peerlink-frontend -- start
 cd ..
 
-# Save PM2 configuration
+# Save PM2
 pm2 save
-
-# Set up PM2 to start on boot
-echo "Setting up PM2 to start on boot..."
 pm2 startup
-# Follow the instructions printed by the above command
+pm2 status
 
 echo "=== Setup Complete ==="
-echo "PeerLink is now running on your VPS!"
+echo "PeerLink is running on your VPS! 🎉"
