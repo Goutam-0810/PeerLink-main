@@ -37,12 +37,19 @@ public class FileSharer {
 
         try(ServerSocket serversocket = new ServerSocket(port)){
             System.out.println("Serving file" + new File(filePath).getName() + "on port" + port);
+            serversocket.setSoTimeout(60000);
             Socket clientSocket = serversocket.accept();
             System.out.println("Client connection: "+ clientSocket.getInetAddress());
             new  Thread(new FileSenderHandler(clientSocket, filePath)).start();
         }
         catch (IOException E){
-            System.out.println("Error handling file server on port"+ port);
+            // Cleanup after timeout
+            System.out.println("File server timed out on port " + port);
+            availableFile.remove(port);         // remove from HashMap
+            File tempFile = new File(filePath);
+            if(tempFile.exists()){
+                tempFile.delete();              // delete temp file
+            }
         }
     }
     private static class FileSenderHandler implements Runnable{
@@ -58,7 +65,7 @@ public class FileSharer {
             try(FileInputStream fis = new  FileInputStream(filePath)){
                 OutputStream oos = clientSocket.getOutputStream();
                 String filename =new File(filePath).getName();
-                String Header= "FileName: "+ filename +"/n";
+                String Header= "Filename: "+ filename +"\n";
                 oos.write(Header.getBytes());
 
                 byte [] buffer = new byte[4096];
