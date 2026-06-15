@@ -1,0 +1,13 @@
+ui/node_modules
+ui/.next
+
+.git
+target
+
+coverage
+dist
+
+.idea
+.vscode
+
+*.log
