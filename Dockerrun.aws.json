@@ -1,26 +1,3 @@
 {
-  "AWSEBDockerrunVersion": "3",
-  "dockerComposeVersion": "3.7",
-  "services": {
-    "backend": {
-      "build": {
-        "context": ".",
-        "dockerfile": "Dockerfile-backend"
-      },
-      "ports": ["8080:8080"],
-      "mem_limit": "512m"
-    },
-    "frontend": {
-      "build": {
-        "context": ".",
-        "dockerfile": "Dockerfile-frontend"
-      },
-      "ports": ["80:3000"],
-      "environment": {
-        "NEXT_PUBLIC_API_URL": "http://backend:8080"
-      },
-      "depends_on": ["backend"],
-      "mem_limit": "256m"
-    }
-  }
+  "AWSEBDockerrunVersion": 3
 }

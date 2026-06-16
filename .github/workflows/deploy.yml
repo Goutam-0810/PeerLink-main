@@ -53,7 +53,14 @@ jobs:
 
       - name: Create deployment package
         run: |
-          zip -r deploy.zip Dockerrun.aws.json Dockerfile-backend Dockerfile-frontend src/ ui/ pom.xml
+          zip -r deploy.zip \
+            Dockerrun.aws.json \
+            docker-compose.yml \
+            Dockerfile-backend \
+            Dockerfile-frontend \
+            src \
+            ui \
+            pom.xml
 
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
