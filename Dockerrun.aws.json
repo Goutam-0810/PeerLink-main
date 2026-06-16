@@ -1,36 +1,26 @@
 {
-  "AWSEBDockerrunVersion": 2,
-  "containerDefinitions": [
-    {
-      "name": "backend",
-      "image": "526752460655.dkr.ecr.ap-south-1.amazonaws.com/peerlink-backend:latest",
-      "essential": true,
-      "memory": 512,
-      "portMappings": [
-        {
-          "hostPort": 8080,
-          "containerPort": 8080
-        }
-      ]
+  "AWSEBDockerrunVersion": "3",
+  "dockerComposeVersion": "3.7",
+  "services": {
+    "backend": {
+      "build": {
+        "context": ".",
+        "dockerfile": "Dockerfile-backend"
+      },
+      "ports": ["8080:8080"],
+      "mem_limit": "512m"
     },
-    {
-      "name": "frontend",
-      "image": "526752460655.dkr.ecr.ap-south-1.amazonaws.com/peerlink-frontend:latest",
-      "essential": true,
-      "memory": 256,
-      "portMappings": [
-        {
-          "hostPort": 80,
-          "containerPort": 3000
-        }
-      ],
-      "environment": [
-        {
-          "name": "NEXT_PUBLIC_API_URL",
-          "value": "http://localhost:8080"
-        }
-      ],
-      "links": ["backend"]
+    "frontend": {
+      "build": {
+        "context": ".",
+        "dockerfile": "Dockerfile-frontend"
+      },
+      "ports": ["80:3000"],
+      "environment": {
+        "NEXT_PUBLIC_API_URL": "http://backend:8080"
+      },
+      "depends_on": ["backend"],
+      "mem_limit": "256m"
     }
-  ]
+  }
 }
