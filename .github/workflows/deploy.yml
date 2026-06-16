@@ -5,29 +5,30 @@ on:
     branches:
       - master
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1 - Checkout code
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4  # ✅ updated
 
-      # Step 2 - Configure AWS credentials
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4  # ✅ updated
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # Step 3 - Login to Amazon ECR
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2  # ✅ updated
+        with:
+          mask-password: true  # ✅ fixes password warning
 
-      # Step 4 - Build and push Backend image
       - name: Build and push Backend image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -39,7 +40,6 @@ jobs:
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
-      # Step 5 - Build and push Frontend image
       - name: Build and push Frontend image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
@@ -51,19 +51,10 @@ jobs:
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
 
-      # Step 6 - Update Dockerrun.aws.json
-      - name: Update Dockerrun.aws.json
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        run: |
-          sed -i "s|YOUR_ECR_URI|$ECR_REGISTRY|g" Dockerrun.aws.json
-
-      # Step 7 - Create deployment package
       - name: Create deployment package
         run: |
           zip -r deploy.zip Dockerrun.aws.json
 
-      # Step 8 - Deploy to Elastic Beanstalk
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v21
         with:
@@ -75,7 +66,5 @@ jobs:
           version_label: ${{ github.sha }}
           deployment_package: deploy.zip
 
-      - name: Deployment Complete
-        run: |
-          echo "PeerLink deployed successfully!"
-          echo "URL: http://peerlink.ap-south-1.elasticbeanstalk.com"
+      - name: Done
+        run: echo "✅ PeerLink deployed to AWS!"
