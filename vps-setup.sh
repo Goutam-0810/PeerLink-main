@@ -31,7 +31,7 @@ sudo apt install -y maven
 
 # Clone repository
 echo "Cloning repository..."
-git clone https://github.com/Goutam-0810/peerlink.git
+git clone https://github.com/Goutam-0810/Peerink-main.git
 cd peerlink
 
 # Build backend
