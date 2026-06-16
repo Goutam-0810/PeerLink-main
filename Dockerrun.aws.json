@@ -1,0 +1,36 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "backend",
+      "image": "526752460655.dkr.ecr.ap-south-1.amazonaws.com/peerlink-backend:latest",
+      "essential": true,
+      "memory": 512,
+      "portMappings": [
+        {
+          "hostPort": 8080,
+          "containerPort": 8080
+        }
+      ]
+    },
+    {
+      "name": "frontend",
+      "image": "526752460655.dkr.ecr.ap-south-1.amazonaws.com/peerlink-frontend:latest",
+      "essential": true,
+      "memory": 256,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 3000
+        }
+      ],
+      "environment": [
+        {
+          "name": "NEXT_PUBLIC_API_URL",
+          "value": "http://localhost:8080"
+        }
+      ],
+      "links": ["backend"]
+    }
+  ]
+}
