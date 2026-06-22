@@ -12,8 +12,18 @@ export default function InviteCode({ port }: InviteCodeProps) {
   
   if (!port) return null;
   
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(port.toString());
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(port.toString());
+    } catch {
+      const textArea = document.createElement('textarea');
+      textArea.value = port.toString();
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+    }
+
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
