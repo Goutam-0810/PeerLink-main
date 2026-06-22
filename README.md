@@ -1,5 +1,5 @@
-## 6. Execution Commands 
-### 6.1 Run locally
+##  Execution Commands 
+### 1 Run locally
 1. **Start Backend**:
    Ensure Java JDK 17 is installed. Run Maven commands from the root directory:
    ```bash
@@ -14,7 +14,7 @@
    npm start
    ```
    Access the application at `http://localhost:3000`.
-### 6.2 Run via Docker Compose (Recommended)
+### 2 Run via Docker Compose (Recommended)
     before running check docker-compose file
 1. **Build and Start Containers**:
    ```bash
