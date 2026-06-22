@@ -19,8 +19,8 @@ services:
       context: .
       dockerfile: Dockerfile-frontend
     ports:
-      - "80:3000"   #use this file when using AWS cloud
-      #- "3000:3000" #use this file to run on your local host
+      #- "80:3000"   #use this file when using AWS cloud
+      - "3000:3000" #use this file to run on your local host
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:8080
     depends_on:

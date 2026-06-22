@@ -31,34 +31,75 @@ export default function FileDownload({ onDownload, isDownloading }: FileDownload
   
   return (
     <div className="space-y-4">
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-100">
-        <h3 className="text-lg font-medium text-blue-800 mb-2">Receive a File</h3>
-        <p className="text-sm text-blue-600 mb-0">
-          Enter the invite code shared with you to download the file.
+      <div className="bg-white/10 backdrop-blur-md p-5 rounded-2xl border border-white/20">
+        <h3 className="text-xl font-bold text-white mb-2">
+          📥 Receive a File
+        </h3>
+
+        <p className="text-gray-200">
+          Enter the invite code to securely download a shared file.
         </p>
       </div>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="inviteCode" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="inviteCode"
+            className="block text-sm font-medium text-gray-200 mb-2"
+          >
             Invite Code
           </label>
+
           <input
             type="text"
             id="inviteCode"
             value={inviteCode}
             onChange={(e) => setInviteCode(e.target.value)}
-            placeholder="Enter the invite code (port number)"
-            className="input-field"
+            placeholder="e.g. 52341"
+            className="
+              w-full
+              px-4
+              py-3
+              rounded-xl
+              bg-white/10
+              border
+              border-white/20
+              text-white
+              placeholder:text-gray-300
+              focus:outline-none
+              focus:ring-2
+              focus:ring-cyan-400
+            "
             disabled={isDownloading}
             required
           />
-          {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+
+          {error && (
+            <p className="mt-2 text-sm text-red-300 font-medium">
+              ⚠ {error}
+            </p>
+          )}
         </div>
-        
+
         <button
           type="submit"
-          className="btn-primary flex items-center justify-center w-full"
+          className="
+            w-full
+            py-3
+            rounded-xl
+            font-semibold
+            text-white
+            bg-gradient-to-r
+            from-blue-500
+            to-cyan-500
+            hover:from-blue-600
+            hover:to-cyan-600
+            transition-all
+            duration-300
+            flex
+            items-center
+            justify-center
+          "
           disabled={isDownloading}
         >
           {isDownloading ? (

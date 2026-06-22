@@ -19,14 +19,27 @@ export default function InviteCode({ port }: InviteCodeProps) {
   };
   
   return (
-    <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-      <h3 className="text-lg font-medium text-green-800">File Ready to Share!</h3>
-      <p className="text-sm text-green-600 mb-3">
+    <div className="mt-6 p-5 bg-green-500/10 border border-green-400/30 rounded-2xl backdrop-blur-md">
+      <h3 className="text-lg font-bold text-green-300"></h3>
+      <p className="text-sm text-green-200 mb-3">
         Share this invite code with anyone you want to share the file with:
       </p>
       
       <div className="flex items-center">
-        <div className="flex-1 bg-white p-3 rounded-l-md border border-r-0 border-gray-300 font-mono text-lg">
+        <div className="
+          flex-1
+          bg-white/10
+          border
+          border-white/20
+          p-4
+          rounded-l-xl
+          font-mono
+          text-2xl
+          font-bold
+          text-white
+          tracking-wider
+          text-center
+        ">
           {port}
         </div>
         <button
