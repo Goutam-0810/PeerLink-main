@@ -17,8 +17,6 @@ public class App {
                                 fileController.stop();
                             }
                     ){});
-            System.out.println("Press Enter to stop the server");
-            System.in.read();
 
         }
         catch(Exception e){

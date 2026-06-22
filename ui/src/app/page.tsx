@@ -1,10 +1,18 @@
 'use client';
-
+import { motion } from 'framer-motion';
 import { useState } from 'react';
+import {
+  FaUpload,
+  FaDownload,
+  FaBolt,
+  FaLock,
+  FaGlobe
+} from 'react-icons/fa';
 import FileUpload from '@/components/FileUpload';
 import FileDownload from '@/components/FileDownload';
 import InviteCode from '@/components/InviteCode';
 import axios from 'axios';
+
 
 export default function Home() {
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
@@ -84,29 +92,78 @@ export default function Home() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+     <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.6 }}
+        className="container mx-auto px-4 py-8 max-w-4xl"
+      >
+    <nav className="flex justify-between items-center mb-12">
+      <div className="text-2xl font-bold text-white">
+        🔗 PEERLINK
+      </div>
+
+      <div className="flex gap-6 text-gray-200">
+        <a
+          href="https://github.com/Goutam-0810/PeerLink-main/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-white transition"
+        >
+          GitHub
+        </a>
+
+        <a
+          href="/features"
+          className="hover:text-white transition"
+        >
+          Features
+        </a>
+      </div>
+    </nav>
       <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-blue-600 mb-2">PeerLink</h1>
-        <p className="text-xl text-gray-600">Secure P2P File Sharing</p>
+        <h1 className="text-5xl font-extrabold text-white mb-4">
+          Secure File Sharing Made Simple
+        </h1>
+
+        <p className="text-xl text-gray-200">
+          Share files instantly using a secure invite code.
+        </p>
+
+        <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/20 border border-green-400/30">
+          <div className="w-2 h-2 rounded-full bg-green-400"></div>
+
+          <span className="text-sm text-green-200">
+            Service Online
+          </span>
+        </div>
       </header>
       
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <div className="flex border-b mb-6">
+      <div className="
+      bg-white/10
+      backdrop-blur-lg
+      border
+      border-white/20
+      rounded-3xl
+      shadow-2xl
+      p-8
+      ">
+        <div className="flex justify-center gap-4 mb-8">
           <button
-            className={`px-4 py-2 font-medium ${
+            className={`px-6 py-3 rounded-full font-medium transition-all ${
               activeTab === 'upload'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+                ? 'bg-blue-600 text-white'
+                : 'bg-white/20 text-white hover:bg-white/30'
             }`}
             onClick={() => setActiveTab('upload')}
           >
             Share a File
           </button>
           <button
-            className={`px-4 py-2 font-medium ${
-              activeTab === 'download'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+            className={`px-6 py-3 rounded-full font-medium transition-all ${
+                activeTab === 'download'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white/20 text-white hover:bg-white/30'
             }`}
             onClick={() => setActiveTab('download')}
           >
@@ -148,10 +205,43 @@ export default function Home() {
           </div>
         )}
       </div>
-      
-      <footer className="mt-12 text-center text-gray-500 text-sm">
-        <p>PeerLink &copy; {new Date().getFullYear()} - Secure P2P File Sharing</p>
-      </footer>
-    </div>
-  );
-}
+      <div id="features" className="grid md:grid-cols-3 gap-6 mt-10">
+
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 text-center">
+          <FaBolt className="mx-auto text-4xl mb-3 text-yellow-300" />
+          <h3 className="font-bold text-lg text-white">
+            Fast Transfer
+          </h3>
+          <p className="text-gray-200">
+            Direct peer-to-peer file sharing.
+          </p>
+        </div>
+
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 text-center">
+          <FaLock className="mx-auto text-4xl mb-3 text-green-300" />
+          <h3 className="font-bold text-lg text-white">
+            Secure
+          </h3>
+          <p className="text-gray-200">
+            Share files safely with invite codes.
+          </p>
+        </div>
+
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 text-center">
+          <FaGlobe className="mx-auto text-4xl mb-3 text-cyan-300" />
+          <h3 className="font-bold text-lg text-white">
+            Global Access
+          </h3>
+          <p className="text-gray-200">
+            Share files anywhere.
+          </p>
+        </div>
+      </div>
+            <footer className="mt-12 text-center text-white/80 text-sm">
+              <p className="mt-2">
+                © {new Date().getFullYear()} PeerLink
+              </p>
+            </footer>
+          </motion.div>
+        );
+      }
